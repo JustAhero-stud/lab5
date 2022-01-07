@@ -20,5 +20,6 @@ public:
 	void matvecproduct();
 	void Ly(real* f);
 	void Ux();
+	void LU();
 	void input(ifstream& input);
 };
