@@ -11,36 +11,44 @@ real Num:: vecproduct(real* a, real* b){
 	}
 	return res;
 }
-
-void Num::matvecproduct() {
+real Num::norma(real* a){
+	real res = 0;
 	for (int i = 0; i < N; i++)
 	{
-		xk[i] = vecproduct(A[i], xk_1);
+		res += a[i] * a[i];
+	}
+	return sqrt(res);
+
+}
+void Num::matvecproduct(real* a, real* b) {
+	for (int i = 0; i < N; i++)
+	{
+		b[i] = 0;
+		for (int j = 0; j < N; j++)
+		{
+			b[i] += A[i][j] * a[i];
+		}
 	}
 }
 
-void Num::Ly(real* f) {
+void Num::LUsolve(real* f, real* a) {
 	for (int i = 0; i < N; i++)
 	{
 		real sum = 0.0;
 		for (int j = 0; j < i; j++)
 		{
-			sum -= A[i][j] * y[j];
+			sum += L[i][j] * a[j];
 		}
-		y[i] = f[i] + sum;
+		a[i] = f[i] - sum;
 	}
-}
-
-void Num::Ux() {
-	real* x = y;
-	for (int i = N-1; i >= 0; i--)
+	for (int i = N - 1; i >= 0; i--)
 	{
 		real sum = 0;
-		for (int j = i+1; j < N; j++)
+		for (int j = i + 1; j < N; j++)
 		{
-			x[i] -= A[i][j] * x[j];
+			sum += A[i][j] * a[j];
 		}
-		x[i] /= A[i][i];
+		a[i] =(a[i]- sum)/A[i][i];
 	}
 }
 
@@ -49,9 +57,8 @@ void Num::input(ifstream& finput) {
 	finput >> maxiter;
 	finput >> eps;
 	A = new real* [N];
-	y = new real [N];
-	xk = new real[N];
-	xk_1 = new real[N];
+	x = new real[N];
+	//xk_1 = new real[N];
 	for (int i = 0; i < N; i++)
 	{
 		A[i] = new real[N];
@@ -59,34 +66,84 @@ void Num::input(ifstream& finput) {
 		{
 			finput >> A[i][j];
 		}
-		xk[i] = 1;//надо выбрать )
-		xk_1[i] = xk[i];
+		x[i] = 1;//надо выбрать )
 	}
 
 }
 
 void Num::LU() {
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			if (i <= j)
-			{
-				real res = 0;
-				for (int k = 0; k < N; k++)
-					res -= A[i][k] * A[k][j];
-				A[i][j] += res;
+	for (int i = 0; i < N; i++) {
+		L[i][i] = 1;
+		for (int j = i; j < N; j++) {
+			real sum = 0;
+			for (int k = 0; k < i; k++) {
+				sum += L[i][k] * U[k][j];
 			}
-			else
-			{
-				real res = 0;
-				for (int k = 0; k < N; k++)
-				{
-					res -= A[i][k] * A[k][j];
-				}
-				A[i][j] += res;
-				A[i][j] /= A[j][j];
+			U[i][j] = A[i][j] - sum;
+		}
+
+		for (int j = i; j < N; j++) {
+			real sum = 0;
+			for (int k = 0; k < i; k++) {
+				sum += L[j][k] * U[k][i];
 			}
+			L[j][i] = (A[j][i] - sum) / U[i][i];
 		}
 	}
+}
+
+void Num::FindMax() {
+	real lambd = 0, lambd_1, norm_x, norm_x1, nev;
+	int iter = 0;
+	norm_x = norma(x);
+	for (; iter < maxiter; iter++)
+	{
+		matvecproduct(x, x1);
+		norm_x1 = norma(x1);
+		lambd_1 = norm_x1 / norm_x;
+		nev = abs(lambd_1 - lambd) / abs(lambd_1);
+		if (nev < eps)
+		{
+			lambd = lambd_1;
+			break;
+		}
+		lambd = lambd_1;
+		norm_x = norm_x1;
+		for (int i = 0; i < N; i++)
+		{
+			x[i] = x1[i];
+			x[i] /= norm_x;
+		}
+		norm_x = 1; // не понимаю почему
+
+	}
+	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
+}
+void Num::FindMin() {
+	real lambd = 0, lambd_1, norm_x, norm_x1, nev;
+	int iter = 0;
+	norm_x = norma(x);
+	LU();
+	for (; iter < maxiter; iter++)
+	{
+		LUsolve(x,x1);
+		norm_x1 = norma(x1);
+		lambd_1 = norm_x1 / norm_x;
+		nev = abs(lambd_1 - lambd) / abs(lambd_1);
+		if (nev < eps)
+		{
+			lambd = lambd_1;
+			break;
+		}
+		lambd = lambd_1;
+		norm_x = norm_x1;
+		for (int i = 0; i < N; i++)
+		{
+			x[i] = x1[i];
+			x[i] /= norm_x;
+		}
+		norm_x = 1; // не понимаю почему
+
+	}
+	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << 1/lambd << endl;
 }

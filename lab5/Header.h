@@ -12,14 +12,18 @@ class Num {
 	int maxiter;
 	real eps;
 	real** A;
-	real* xk_1;
+	real** U;
+	real** L;
+	real* x1;
 	real* xk;
-	real* y;
+	real* x;
 public:
 	real vecproduct(real* a, real* b);
-	void matvecproduct();
-	void Ly(real* f);
-	void Ux();
+	void matvecproduct(real* a, real* b);
+	void LUsolve(real* f, real* x1);
+	real norma(real* a);
+	void FindMax();
+	void FindMin();
 	void LU();
 	void input(ifstream& input);
 };
