@@ -3,14 +3,6 @@
 #include <iomanip>
 
 using namespace std;
-real Num:: vecproduct(real* a, real* b){
-	real res = 0;
-	for (int i = 0; i < N; i++)
-	{
-		res += a[i] * b[i];
-	}
-	return res;
-}
 real Num::norma(real* a){
 	real res = 0;
 	for (int i = 0; i < N; i++)
@@ -121,10 +113,9 @@ void Num::FindMax() {
 		for (int i = 0; i < N; i++)
 		{
 			x[i] = x1[i];
-			x[i] /= norm_x;
+			//x[i] /= norm_x;// как € понимаю если убрать это и след хуйню то ничего не помен€етс€)(!?
 		}
-		norm_x = 1; // не понимаю почему
-		//cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
+		//norm_x = 1; // не понимаю почему
 	}
 	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
 }
@@ -149,9 +140,9 @@ void Num::FindMin() {
 		for (int i = 0; i < N; i++)
 		{
 			x[i] = x1[i];
-			x[i] /= norm_x;
+			//x[i] /= norm_x;// как € понимаю если убрать это и след хуйню то ничего не помен€етс€)(!?
 		}
-		norm_x = 1; // не понимаю почему
+		//norm_x = 1; // не понимаю почему
 
 	}
 	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << 1/lambd << endl;

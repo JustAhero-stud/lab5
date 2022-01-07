@@ -19,7 +19,6 @@ class Num {
 	real* xk;
 	real* x;
 public:
-	real vecproduct(real* a, real* b);
 	void matvecproduct(real* a, real* b);
 	void LUsolve(real* f, real* x1);
 	real norma(real* a);
