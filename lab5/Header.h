@@ -11,6 +11,7 @@ class Num {
 	int N;
 	int maxiter;
 	real eps;
+	real nev;
 	real** A;
 	real** U;
 	real** L;

@@ -4,6 +4,9 @@
 
 int main()
 {
+    Num num;
     ifstream* input = new ifstream("input.txt");
-    ofstream* output = new ofstream("output.txt");
+    num.input(*input);
+    num.FindMax();
+    num.FindMin();
 }

@@ -26,7 +26,7 @@ void Num::matvecproduct(real* a, real* b) {
 		b[i] = 0;
 		for (int j = 0; j < N; j++)
 		{
-			b[i] += A[i][j] * a[i];
+			b[i] += A[i][j] * a[j];
 		}
 	}
 }
@@ -46,9 +46,9 @@ void Num::LUsolve(real* f, real* a) {
 		real sum = 0;
 		for (int j = i + 1; j < N; j++)
 		{
-			sum += A[i][j] * a[j];
+			sum += U[i][j] * a[j];
 		}
-		a[i] =(a[i]- sum)/A[i][i];
+		a[i] =(a[i]- sum)/U[i][i];
 	}
 }
 
@@ -57,8 +57,10 @@ void Num::input(ifstream& finput) {
 	finput >> maxiter;
 	finput >> eps;
 	A = new real* [N];
-	x = new real[N];
-	//xk_1 = new real[N];
+	x = new real [N];
+	x1 = new real [N];
+	L = new real* [N];
+	U = new real* [N];
 	for (int i = 0; i < N; i++)
 	{
 		A[i] = new real[N];
@@ -72,10 +74,17 @@ void Num::input(ifstream& finput) {
 }
 
 void Num::LU() {
+	real sum = 0;
+	for (int i = 0; i < N; i++)
+	{
+		L[i] = new real[N];
+		U[i] = new real[N];
+	}
 	for (int i = 0; i < N; i++) {
+	
 		L[i][i] = 1;
 		for (int j = i; j < N; j++) {
-			real sum = 0;
+			sum = 0;
 			for (int k = 0; k < i; k++) {
 				sum += L[i][k] * U[k][j];
 			}
@@ -83,7 +92,7 @@ void Num::LU() {
 		}
 
 		for (int j = i; j < N; j++) {
-			real sum = 0;
+			sum = 0;
 			for (int k = 0; k < i; k++) {
 				sum += L[j][k] * U[k][i];
 			}
@@ -115,7 +124,7 @@ void Num::FindMax() {
 			x[i] /= norm_x;
 		}
 		norm_x = 1; // не понимаю почему
-
+		//cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
 	}
 	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
 }
