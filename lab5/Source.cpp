@@ -113,13 +113,13 @@ void Num::FindMax() {
 		for (int i = 0; i < N; i++)
 		{
 			x[i] = x1[i];
-			//x[i] /= norm_x;// как я понимаю если убрать это и след хуйню то ничего не поменяется)(!?
 		}
-		//norm_x = 1; // не понимаю почему
+
 	}
-	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
+	cout << "Max value: "<< endl << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << lambd << endl;
 }
 void Num::FindMin() {
+	cout << endl;
 	real lambd = 0, lambd_1, norm_x, norm_x1, nev;
 	int iter = 0;
 	norm_x = norma(x);
@@ -140,10 +140,7 @@ void Num::FindMin() {
 		for (int i = 0; i < N; i++)
 		{
 			x[i] = x1[i];
-			//x[i] /= norm_x;// как я понимаю если убрать это и след хуйню то ничего не поменяется)(!?
 		}
-		//norm_x = 1; // не понимаю почему
-
 	}
-	cout << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << 1/lambd << endl;
+	cout << "Min value: "<< endl << "Iteration: " << iter << endl << "accuracy: " << nev << endl << setprecision(14) << "lambda: " << 1/lambd << endl;
 }
